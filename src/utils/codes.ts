@@ -1,10 +1,14 @@
-// ? a = privilege
-// ? b = route
+// ? p = privilege
+// ? r = route
 
 export const codes = {
-  // ? a
-  "Moderator privilege required": "20240503a000",
+  // ? p.m.
+  "Moderator privilege required": "20240503p000",
+  "Console Guard error": "20240701p000",
 
-  // ? b
-  "Invalid Console Route": "20240503b000",
+  // ? r
+  "Invalid Console Route": "20240503r000",
+  "Route not Found": "20240621r001",
+
+  // ? c
 };

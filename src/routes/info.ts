@@ -1,7 +1,7 @@
 import express from "express";
 
 // handlers
-import * as handler from "../handlers/info";
+import * as handler from "../controllers/info";
 
 const router = express.Router({ caseSensitive: true, strict: true });
 

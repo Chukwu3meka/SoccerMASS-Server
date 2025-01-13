@@ -1,0 +1,17 @@
+#dependencies
+node_modules/
+
+
+#build
+dist/
+
+#misc
+.git/
+
+#debug
+.log
+report.*
+npm-debug.log*
+
+#private files
+*.env

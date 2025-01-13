@@ -7,7 +7,7 @@ import timeout from "../middleware/timeout";
 import routeGuard from "../middleware/routeGuard";
 
 // handlers
-import * as personal from "../handlers/accounts";
+import * as personal from "../controllers/accounts";
 // import { haltOnTimedout } from "../utils/handlers";
 
 const router = express.Router({ caseSensitive: true, strict: true });

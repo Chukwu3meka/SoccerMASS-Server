@@ -1,6 +1,20 @@
-import { codes } from "../utils/codes";
-import * as handler from "../handlers/console";
+import * as handler from "../controllers/console";
 import express, { Request, Response } from "express";
+
+import { codes } from "../utils/codes";
+import { formatDate } from "../utils/handlers";
+import { INFO_ALL_FAILED_REQUESTS } from "../models/info.model";
+
+const fallbackRoute = async (req: Request, res: Response) => {
+  await INFO_ALL_FAILED_REQUESTS.create({
+    error: "Invalid Console route",
+    date: formatDate(new Date()),
+    data: codes["Invalid Console Route"],
+    request: { body: JSON.stringify(req.body), headers: JSON.stringify(req.headers) },
+  });
+
+  return res.status(200).json({ success: true, message: new Date().toDateString(), data: codes["Invalid Console Route"] });
+};
 
 const router = express.Router({ caseSensitive: true, strict: true });
 
@@ -17,9 +31,12 @@ router.route("/logs/daily-statistics").get(handler.dailyStatistics);
 router.route("/logs/all-requests").get(handler.allRequests);
 router.route("/logs/failed-requests").get(handler.failedRequests);
 
+router.route("/games/game-worlds").post(handler.createGameWorld);
+router.route("/games/game-worlds").get(handler.getGameWorlds);
+router.route("/games/game-worlds/:id").get(handler.createGameWorld);
+router.route("/games/game-worlds/:id").patch(handler.createGameWorld);
+
 // ? fallback route
-router.route("/*").get((req: Request, res: Response) => {
-  return res.status(200).json({ success: true, message: new Date().toDateString(), data: codes["Invalid Console Route"] });
-});
+router.route("*").all(fallbackRoute);
 
 export default router;

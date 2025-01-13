@@ -2,7 +2,7 @@ import { styleText } from "util";
 import { format } from "date-fns";
 import { catchError, formatDate } from "../utils/handlers";
 import { Request, Response, NextFunction } from "express";
-import { ALL_REQUEST, DAILY_STAT } from "../models/info";
+import { INFO_ALL_REQUEST, INFO_ALL_DAILY_STAT } from "../models/info.model";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,11 +17,11 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         path = fullPath.join("/");
 
       if (version && domain && path) {
-        await ALL_REQUEST.create({ version, domain, path, date: formatDate(new Date()) });
+        await INFO_ALL_REQUEST.create({ version, domain, path, date: formatDate(new Date()) });
 
         //  ? "Daily Records of Server Stat"
 
-        await DAILY_STAT.findOneAndUpdate(
+        await INFO_ALL_DAILY_STAT.findOneAndUpdate(
           { date: formatDate(new Date()) },
           {
             $inc: {

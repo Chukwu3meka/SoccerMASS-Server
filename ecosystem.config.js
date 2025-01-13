@@ -1,24 +1,22 @@
 module.exports = {
   apps: [
     {
-      name: "WaveRD",
-      script: "./dist/index.js",
       watch: true,
-      ignore_watch: ["node_modules", ".git"],
-      watch_options: {
-        followSymlinks: false,
-      },
+      name: "WaveRD",
       // instances: 3,
+      script: "./dist/index.js",
+      ignore_watch: ["node_modules", ".git"],
+      watch_options: { followSymlinks: false },
     },
     {
-      name: "Compiler",
       // instances: 3,
+      name: "Compiler",
       script: "./start-tsc.sh",
     },
     {
       name: "Gateway",
-      script: "../gateway/index.js",
       // instances: 4,
+      script: "../waverd-gateway/index.js",
     },
   ],
 };

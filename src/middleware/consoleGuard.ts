@@ -2,17 +2,21 @@ import jwt from "jsonwebtoken";
 
 import { BSON } from "mongodb";
 import { codes } from "../utils/codes";
-import { PROFILE } from "../models/accounts";
+import { ACCOUNTS_PROFILE } from "../models/accounts.model";
+import { INFO_ALL_FAILED_REQUESTS } from "../models/info.model";
 import { Request, Response, NextFunction } from "express";
-import { catchError, getIdFromSession } from "../utils/handlers";
+import { catchError, formatDate, getIdFromSession } from "../utils/handlers";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const guardResponse = (message: string) => {
-    // !!!
-    // add error to database
+  const guardResponse = async (message: string) => {
+    await INFO_ALL_FAILED_REQUESTS.create({
+      data: message,
+      date: formatDate(new Date()),
+      error: codes["Console Guard error"],
+      request: { body: JSON.stringify(req.body), headers: JSON.stringify(req.headers) },
+    });
 
-    console.error("Error Code:" + message);
-    return res.status(200).json({ success: true, message: new Date().toDateString(), data: null });
+    return res.status(200).json({ success: true, message: new Date().toDateString(), data: codes["Invalid Console Route"] });
   };
 
   try {
@@ -32,7 +36,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
         req.body = { ...req.body, auth: { id, session } };
 
-        const profile = await PROFILE.findOne(new BSON.ObjectId(id));
+        const profile = await ACCOUNTS_PROFILE.findOne(new BSON.ObjectId(id));
 
         if (!profile) return guardResponse("Profile not found");
         if (profile?.auth?.session !== session) return guardResponse("Invalid session ID");
@@ -42,7 +46,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       }
     });
   } catch (err: any) {
-    guardResponse(err.message || "Not Authenticated");
+    if (err.message) return guardResponse(err.message);
 
     err.respond = false;
     return catchError({ res, err });

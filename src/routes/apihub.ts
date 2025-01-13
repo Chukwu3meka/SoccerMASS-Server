@@ -1,7 +1,7 @@
 import express from "express";
 
 // handlers
-import * as apihub from "../handlers/apihub";
+import * as apihub from "../controllers/apihub";
 import hubGuard from "../middleware/publicGuard";
 import timeout from "../middleware/timeout";
 
